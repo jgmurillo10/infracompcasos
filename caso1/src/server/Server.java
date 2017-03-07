@@ -29,19 +29,8 @@ public class Server extends Thread{
 	public void run(){
 		while(!buffer.finished())
 		{
-			if(buffer.isFull() && buffer.waiting())
-			{
-				buffer.pop();
-				notify();
-			}
-			else if(!buffer.isEmpty() && !buffer.waiting())
-			{
-				buffer.pop();
-			}
-			else
-			{
-				Thread.yield();
-			}
+			if(buffer.hasMessages()) buffer.pop();
+			yield();
 		}
 		System.out.println("Server " + id + " finished execution.");
 	}
@@ -72,7 +61,7 @@ public class Server extends Thread{
 			//Crear los clientes
 			Client[] clients = new Client[nClients];
 			for (int i=0; i<nClients; i++) {
-				System.out.println("cree " + (i+1) +" clientes");
+				System.out.println("Client " + i +" created");
 				Message[] msgs = new Message[nMessagesPerClient[i]];
 				for(int j = 0; j < nMessagesPerClient[i]; j++)
 				{
@@ -86,7 +75,7 @@ public class Server extends Thread{
 			Server[] servers = new Server[nServers];
 			
 			for (int i=0; i<nServers; i++) {
-				System.out.println("cree servers" + (i+1));
+				System.out.println("Server " + i+" created.");
 				servers[i] = new Server(i,buf);
 				servers[i].start();
 			}

@@ -18,6 +18,7 @@ public class Client extends Thread{
 
 	public void run(){
 		Random random= new Random();
+		int aux = nMessages;
 		while(0<nMessages){
 //			creates messages
 			int num = random.nextInt(100);
@@ -25,9 +26,9 @@ public class Client extends Thread{
 			messages[nMessages-1].send();
 			System.out.println("Enviado: "+num+" Respuesta: "+messages[nMessages-1].getMessage());
 			if(messages[nMessages-1].getMessage()==num+1){
-				System.out.println("Message: "+ nMessages + " of client " + id + " processed succesfully. ");
+				System.out.println("Message: "+ (aux-nMessages+1) + " of client " + id + " processed succesfully. ");
 			}else{
-				System.out.println("Message: "+ nMessages + " of client " + id + " processed unsuccesfully. ");
+				System.out.println("Message: "+ (aux-nMessages+1) + " of client " + id + " processed unsuccesfully. ");
 			}
 			nMessages--;
 		}

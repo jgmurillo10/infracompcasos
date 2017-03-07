@@ -46,22 +46,22 @@ public class Buffer {
 	
 	public synchronized void pop()
 	{
-		Message m = messages.remove(0);
-		m.modify();
-		System.out.println("Mensaje: "+m.getMessage());
-		//pop the message from the buffer
-		//should decrease the messages.size()
-		
+		if(isFull() && isWaiting())
+		{
+			Message m = messages.remove(0);
+			m.modify();	
+			notify();
+		}
+		else if(!isEmpty() && !isWaiting())
+		{
+			Message m = messages.remove(0);
+			m.modify();
+		}
 	}
 	
-	public boolean isEmpty()
+	public boolean hasMessages()
 	{
-		return messages.size() == 0;
-	}
-	
-	public boolean isFull()
-	{
-		return messages.size() == length;
+		return messages.size() != 0;
 	}
 	
 	public void setWaiting()
@@ -69,7 +69,17 @@ public class Buffer {
 		waiting = !waiting;
 	}
 	
-	public boolean waiting()
+	public boolean isFull()
+	{
+		return messages.size() == length;
+	}
+	
+	public boolean isEmpty()
+	{
+		return messages.size() == 0;
+	}
+	
+	public boolean isWaiting()
 	{
 		return waiting;
 	}

@@ -21,7 +21,9 @@ public class Message {
 	
 	public synchronized boolean send(){
 		try {
-			return buffer.send(this);
+			boolean resp = buffer.send(this);
+			wait();
+			return resp;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}finally{
@@ -31,6 +33,7 @@ public class Message {
 	}
 	public synchronized void modify() {
 		message++;
+		notify();
 		System.out.println("Message: Notifying that the value has changed to " + message);
 	}
 }
